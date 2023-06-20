@@ -1,0 +1,15 @@
+#!/usr/bin/php
+<?php
+
+$root_app = realpath(".");
+$root_app = str_replace("/vendor/exopacket/Windsor", "", $root_app);
+
+if (!is_file($root_app . '/vendor/autoload.php')) {
+    exit(1);
+}
+
+require $root_app . '/vendor/autoload.php';
+
+use Windsor\Dev\CLI\CommandRegistry;
+
+CommandRegistry::createApp($argv, $root_app);
