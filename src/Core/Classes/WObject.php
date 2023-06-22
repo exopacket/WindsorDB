@@ -49,36 +49,6 @@ class WObject implements Arrayable {
         return $this->path;
     }
 
-    protected function traverse(WindsorObject $child, SimpleXMLElement $node): SimpleXMLElement
-    {
-        if(count($child->children()) > 0) {
-            foreach ($child->children() as $next) {
-                if(is_array($next) && count($next) === 1) $next = array_values($next)[0];
-                if ($next instanceof WindsorField) $node->addChild($next->name(), $next->value());
-                else if ($next instanceof WindsorObject) $this->traverse($next, $node->addChild($next->name()));
-            }
-        } else {
-            if ($child instanceof WindsorField) $node->addChild($child->name(), $child->value());
-        }
-        return $node;
-    }
-
-    public function replace(int $index, WindsorObject $with)
-    {
-        $this->objects[$index] = $with;
-    }
-
-    public function appendMultiple($value)
-    {
-        $this->values[] = $value;
-    }
-
-    public function appendChild(WindsorObject $child)
-    {
-        if(!isset($this->objects)) $this->objects = [$child];
-        else $this->objects[] = $child;
-    }
-
     public function isSearchable(): bool
     {
         return $this->searchable;
@@ -191,5 +161,16 @@ class WObject implements Arrayable {
                 $this->objects[] = $field;
             }
         }
+    }
+
+    public function first(string $path)
+    {
+        if (method_exists($this->get($path), 'children')) return $this->get($path)->children()[0];
+        else return $this->get($path);
+    }
+
+    public function isArray(string $path): bool
+    {
+        return method_exists($this->get($path), 'children') && $this->get($path)->children() > 1;
     }
 }

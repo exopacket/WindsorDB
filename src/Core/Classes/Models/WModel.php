@@ -2,9 +2,11 @@
 
 namespace Windsor\Core\Classes\Models;
 
-use Windsor\Core\Classes\DynamicArr;
+use SimpleXMLElement;
+use Windsor\Cloud\Cloud;
 use Windsor\Core\Classes\Exception;
-use Windsor\Core\Classes\SimpleXMLElement;
+use Windsor\Core\Classes\Types\WOutput;
+use Windsor\Core\Classes\WField;
 use Windsor\Core\Classes\WObject;
 use Windsor\Core\Classes\XQLBinding;
 use Windsor\Core\Classes\XQLField;
@@ -13,6 +15,7 @@ use Windsor\Core\Classes\XQLObject;
 use Windsor\Core\Supporting\BuildsModels;
 use Windsor\Core\Supporting\BuildsQueries;
 use Windsor\Core\Supporting\WritesFormattedFile;
+use Windsor\Core\Utils\DynamicArr;
 
 abstract class WModel extends WObject
 {
@@ -39,13 +42,13 @@ abstract class WModel extends WObject
         $this->schema($this);
     }
 
-    public function populate(array $data) {
+    public function populate(array $data, WOutput $output) {
         if(array_key_exists("id", $data) && isset($data['id'])) $id = $data['id'];
         else $id = $this->id() ?? $this->generateId();
         $this->id = $id;
         $path = $this->modelKey(true) . "/" . $id . ".xml";
-        $this->iterate($this, simplexml_load_string(Cloud::get($path)));
-        $this->filled = true;
+        $remote = simplexml_load_string(Cloud::get($path));
+        $this->fill($remote);
     }
 
     public function fill($data)
@@ -53,11 +56,8 @@ abstract class WModel extends WObject
         $this->iterate($this, $data);
     }
 
-    private function iterate(XQLObject $object, SimpleXMLElement $element, $dataObject = null)
+    private function iterate(WObject $object, SimpleXMLElement $element)
     {
-
-        if(!isset($dataObject)) $dataObject = $this;
-
         $values = get_object_vars($element->children());
         $dArrSingle = new DynamicArr($values, "singular");
         $dArrMultiple = new DynamicArr($values, "plural");
@@ -66,7 +66,7 @@ abstract class WModel extends WObject
         $children = $object->children();
         foreach($children as $child) {
 
-            if($child instanceof XQLField) {
+            if($child instanceof WField) {
                 if($child->isMultiple() && $dArrMultiple->exists($child->name())) {
                     $dKey = $dArrMultiple->find($child->name());
                     $multipleValues = $values[$dKey];
@@ -75,18 +75,16 @@ abstract class WModel extends WObject
                         foreach ($multipleValues as $value) {
                             $child->appendMultiple($value);
                         }
-                        $dataObject->{$child->name()} = $multipleValues;
                     }
                 } else if($dArrSingle->exists($child->name())) {
                     $dKey = $dArrSingle->find($child->name());
-                    $dataObject->{$child->name()} = $values[$dKey];
                     $child->value($values[$dKey]);
                 } else if($child->isEnforced()) {
                     throw new Exception($child->name() . " is required and were not found.");
                 }
             } else if($child instanceof XQLBinding) {
                 if (array_key_exists($child->fieldName(), $values)) {
-                    $child->parse($values, $dataObject);
+                    $child->parse($values);
                 }
 
             } else if($child instanceof XQLModel) {
@@ -159,11 +157,6 @@ abstract class WModel extends WObject
         return $string;
     }
 
-    public function children(): array
-    {
-        return $this->objects ?? [];
-    }
-
     public function id(): string
     {
         if(isset($this->primary)) {
@@ -205,11 +198,6 @@ abstract class WModel extends WObject
         return $this->id;
     }
 
-    protected function binded(): XQLObject
-    {
-        return $this;
-    }
-
     protected function generateId(): void
     {
         $data = get_called_class() . ":" . time() . ":" . microtime();
@@ -221,11 +209,6 @@ abstract class WModel extends WObject
         $cases = $this->cases();
         $arr = ($plural) ? $cases['plural'] : $cases['singular'];
         return ($camelCase) ? $arr['camel'] : $arr['snake'];
-    }
-
-    public function attached(): array
-    {
-        return $this->attached;
     }
 
     public function isStatic()
