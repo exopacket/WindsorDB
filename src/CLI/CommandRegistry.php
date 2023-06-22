@@ -8,6 +8,7 @@ use Windsor\CLI\Commands\Init;
 use Windsor\CLI\Commands\Install;
 use Windsor\CLI\Commands\Model;
 use Windsor\CLI\Commands\Trigger;
+use Windsor\CLI\Commands\Work;
 
 class CommandRegistry
 {
@@ -16,6 +17,7 @@ class CommandRegistry
 
     protected function map(): array {
         return [
+            'work' => Work::class,
             'init' => Init::class,
             'model' => Model::class,
             'trigger' => Trigger::class,

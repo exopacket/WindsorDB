@@ -10,10 +10,11 @@ class CreateSchema extends DBX
     public static function create()
     {
         self::connect();
-        $con = self::$Windsor;
+        $con = self::$windsor;
         self::instances($con);
         self::withSearchable($con);
         self::withBindings($con);
+        //self::withHooks($con);
     }
 
     private static function instances($con) {

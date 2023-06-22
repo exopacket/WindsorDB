@@ -30,12 +30,6 @@ class WField
         return $this->type;
     }
 
-    public function required($required = null)
-    {
-        if(isset($required)) $this->required = $required;
-        return $this->required;
-    }
-
     public function keys(bool $dimensional = true): array
     {
         $res = [];
