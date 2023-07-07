@@ -8,7 +8,7 @@ use PDO;
 class DBX
 {
     protected static PDO $data;
-    protected static PDO $Windsor;
+    protected static PDO $windsor;
 
     protected static function createTable(PDO $con, string $tableName, array $config)
     {
@@ -44,7 +44,7 @@ class DBX
     {
         if(isset(self::$searchables['$model'])) return;
         self::connect();
-        $con = self::$Windsor;
+        $con = self::$windsor;
         $query = "SELECT id, field_name FROM models_with_searchable WHERE model_name=?";
         $stmt = $con->prepare($query);
         $stmt->bindValue(1, $model->modelKey());
@@ -62,7 +62,7 @@ class DBX
             $searchables = array_column(self::$searchables[$instance->modelKey()],  "field_name");
             if(in_array($field->fieldName(), $searchables)) return;
             self::connect();
-            $con = self::$Windsor;
+            $con = self::$windsor;
             $insertQuery = "INSERT INTO models_with_searchable(`model_name`, `field_name`) VALUES(?, ?)";
             $stmt = $con->prepare($insertQuery);
             $stmt->bindValue(1, $instance->modelKey());
@@ -71,7 +71,7 @@ class DBX
             self::$searchables[$instance->modelKey()][] = $field->fieldName();
         } else {
             self::connect();
-            $con = self::$Windsor;
+            $con = self::$windsor;
             $insertQuery = "INSERT INTO models_with_searchable(`model_name`, `field_name`) VALUES(?, ?)";
             $stmt = $con->prepare($insertQuery);
             $stmt->bindValue(1, $instance->modelKey());
@@ -119,7 +119,7 @@ class DBX
         $dynamic_values = (new DynamicValue($value))->all();
 
         self::connect();
-        $con = self::$Windsor;
+        $con = self::$windsor;
 
         $tableName = $instance->modelKey(true) . "_searchable";
 
@@ -219,10 +219,10 @@ class DBX
     
     protected static function connect()
     {
-        if(!isset(self::$data) || !isset(self::$Windsor)) {
-            $WindsorDriver = Env::get("Windsor_DB_DRIVER");
-            if($WindsorDriver == "mysql") {
-                self::$Windsor = self::mysql(
+        if(!isset(self::$data) || !isset(self::$windsor)) {
+            $windsorDriver = Env::get("Windsor_DB_DRIVER");
+            if($windsorDriver == "mysql") {
+                self::$windsor = self::mysql(
                     Env::get("Windsor_DB_HOST"),
                     Env::get("Windsor_DB_PORT"),
                     Env::get("Windsor_DB_DATABASE"),

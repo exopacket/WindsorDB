@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/windsor-db.iml" filepath="$PROJECT_DIR$/.idea/windsor-db.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/windsor.iml" filepath="$PROJECT_DIR$/.idea/windsor.iml" />
     </modules>
   </component>
 </project>
