@@ -3,7 +3,6 @@
 namespace Windsor\Core\Classes\Models;
 
 use SimpleXMLElement;
-use Windsor\Cloud\Cloud;
 use Windsor\Core\Classes\Exception;
 use Windsor\Core\Classes\Types\WOutput;
 use Windsor\Core\Classes\WField;
@@ -14,6 +13,7 @@ use Windsor\Core\Classes\XQLModel;
 use Windsor\Core\Classes\XQLObject;
 use Windsor\Core\Supporting\BuildsModels;
 use Windsor\Core\Supporting\BuildsQueries;
+use Windsor\Core\Supporting\Cloud\Cloud;
 use Windsor\Core\Supporting\WritesFormattedFile;
 use Windsor\Core\Utils\DynamicArr;
 

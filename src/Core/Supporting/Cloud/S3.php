@@ -1,9 +1,9 @@
 <?php
 
-namespace Windsor\Cloud;
+namespace Windsor\Core\Supporting\Cloud;
 
-use Windsor\Core\Utils\Env;
 use Aws\S3\S3Client;
+use Windsor\Core\Utils\Env;
 
 class S3
 {

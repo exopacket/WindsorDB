@@ -1,6 +1,6 @@
 <?php
 
-namespace Windsor\Cloud;
+namespace Windsor\Core\Supporting\Cloud;
 
 class Cloud
 {
