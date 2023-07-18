@@ -5,7 +5,7 @@ namespace Windsor\Core\Classes;
 use XQL\Core\Types\WType;
 use XQL\Core\Types\XQLtype;
 
-class WField
+class Field
 {
 
     protected WType $type;

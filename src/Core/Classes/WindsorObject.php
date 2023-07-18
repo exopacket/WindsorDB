@@ -6,7 +6,7 @@ use Windsor\Core\Supporting\Arrayable;
 use Windsor\Core\Supporting\BuildsSchemas;
 use Windsor\Core\Supporting\InflectsText;
 
-class WObject implements Arrayable {
+class WindsorObject implements Arrayable {
 
     use BuildsSchemas, InflectsText;
 

@@ -2,7 +2,7 @@
 
 namespace Windsor\Core\Supporting;
 
-use Windsor\Core\Classes\Models\WPrimaryKey;
+use Windsor\Core\Classes\Models\PrimaryKey;
 
 trait BuildsModels
 {
@@ -17,7 +17,7 @@ trait BuildsModels
         $this->final = true;
     }
 
-    protected function primary(WPrimaryKey $key) : void
+    protected function primary(PrimaryKey $key) : void
     {
         $this->primary = $key;
     }

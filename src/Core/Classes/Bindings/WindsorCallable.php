@@ -2,7 +2,7 @@
 
 namespace Windsor\Core\Classes\Bindings;
 
-class WCallable extends WBinding
+class WindsorCallable extends Binding
 {
 
 }

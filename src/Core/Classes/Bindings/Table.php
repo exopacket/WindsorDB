@@ -2,7 +2,7 @@
 
 namespace Windsor\Core\Classes\Bindings;
 
-class WBindingClause
+class Table extends Binding
 {
 
 }

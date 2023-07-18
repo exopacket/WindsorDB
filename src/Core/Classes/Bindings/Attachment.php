@@ -2,13 +2,13 @@
 
 namespace Windsor\Core\Classes\Bindings;
 
-use Windsor\Core\Classes\Models\WModel;
+use Windsor\Core\Classes\Models\Model;
 
-class WAttachment extends WBinding
+class Attachment extends Binding
 {
 
     protected string $id;
-    protected WModel $model;
+    protected Model $model;
 
     public function getType(): string
     {

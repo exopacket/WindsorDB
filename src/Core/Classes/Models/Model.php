@@ -4,9 +4,9 @@ namespace Windsor\Core\Classes\Models;
 
 use SimpleXMLElement;
 use Windsor\Core\Classes\Exception;
-use Windsor\Core\Classes\Types\WOutput;
-use Windsor\Core\Classes\WField;
-use Windsor\Core\Classes\WObject;
+use Windsor\Core\Classes\Types\Output;
+use Windsor\Core\Classes\Field;
+use Windsor\Core\Classes\WindsorObject;
 use Windsor\Core\Classes\XQLBinding;
 use Windsor\Core\Classes\XQLField;
 use Windsor\Core\Classes\XQLModel;
@@ -17,7 +17,7 @@ use Windsor\Core\Supporting\Cloud\Cloud;
 use Windsor\Core\Supporting\WritesFormattedFile;
 use Windsor\Core\Utils\DynamicArr;
 
-abstract class WModel extends WObject
+abstract class Model extends WindsorObject
 {
 
     use BuildsQueries, BuildsModels, WritesFormattedFile;
@@ -27,7 +27,10 @@ abstract class WModel extends WObject
     protected bool $static = false;
     protected bool $final = false;
 
-    protected WPrimaryKey $primary;
+    protected PrimaryKey $primary;
+
+    protected array $callables = [];
+    protected array $hooks = [];
 
     public function __construct(array $data = null) {
         $this->build();
@@ -42,7 +45,7 @@ abstract class WModel extends WObject
         $this->schema($this);
     }
 
-    public function populate(array $data, WOutput $output) {
+    public function populate(array $data, Output $output) {
         if(array_key_exists("id", $data) && isset($data['id'])) $id = $data['id'];
         else $id = $this->id() ?? $this->generateId();
         $this->id = $id;
@@ -56,7 +59,7 @@ abstract class WModel extends WObject
         $this->iterate($this, $data);
     }
 
-    private function iterate(WObject $object, SimpleXMLElement $element)
+    private function iterate(WindsorObject $object, SimpleXMLElement $element)
     {
         $values = get_object_vars($element->children());
         $dArrSingle = new DynamicArr($values, "singular");
@@ -66,7 +69,7 @@ abstract class WModel extends WObject
         $children = $object->children();
         foreach($children as $child) {
 
-            if($child instanceof WField) {
+            if($child instanceof Field) {
                 if($child->isMultiple() && $dArrMultiple->exists($child->name())) {
                     $dKey = $dArrMultiple->find($child->name());
                     $multipleValues = $values[$dKey];
@@ -209,6 +212,18 @@ abstract class WModel extends WObject
         $cases = $this->cases();
         $arr = ($plural) ? $cases['plural'] : $cases['singular'];
         return ($camelCase) ? $arr['camel'] : $arr['snake'];
+    }
+
+    protected function onCreate() {
+
+    }
+
+    protected function onUpdate() {
+
+    }
+
+    protected function onDelete() {
+
     }
 
     public function isStatic()

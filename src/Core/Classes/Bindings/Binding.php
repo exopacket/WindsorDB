@@ -2,16 +2,16 @@
 
 namespace Windsor\Core\Classes\Bindings;
 
-use Windsor\Core\Classes\WObject;
+use Windsor\Core\Classes\WindsorObject;
 
-abstract class WBinding
+abstract class Binding
 {
 
     protected array $references = [];
 
     public abstract function getType(): string;
-    public abstract function retrieve(): WObject;
-    public abstract function update(): WObject;
+    public abstract function retrieve(): WindsorObject;
+    public abstract function update(): WindsorObject;
 
     public function store(): void
     {

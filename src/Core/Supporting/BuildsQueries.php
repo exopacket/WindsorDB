@@ -3,12 +3,12 @@
 namespace Windsor\Core\Supporting;
 
 use Exception;
-use Windsor\Core\Classes\Bindings\WBinding;
-use Windsor\Core\Classes\Bindings\WCallable;
+use Windsor\Core\Classes\Bindings\Binding;
+use Windsor\Core\Classes\Bindings\Callable;
 use Windsor\Core\Classes\Bindings\WStore;
-use Windsor\Core\Classes\Models\WModel;
-use Windsor\Core\Classes\WField;
-use Windsor\Core\Classes\WObject;
+use Windsor\Core\Classes\Models\Model;
+use Windsor\Core\Classes\Field;
+use Windsor\Core\Classes\WindsorObject;
 use Windsor\Core\Utils\DynamicArr;
 use Windsor\DB\DBX;
 
@@ -22,7 +22,7 @@ trait BuildsQueries
         return $instance;
     }
 
-    public static function create(array|\Closure $data = null): WModel
+    public static function create(array|\Closure $data = null): Model
     {
         $class = get_called_class();
         $instance = new $class();
@@ -45,7 +45,7 @@ trait BuildsQueries
         return $instance;
     }
 
-    private static function construct(WModel $instance, WObject $object, array $values, string $path) {
+    private static function construct(Model $instance, WindsorObject $object, array $values, string $path) {
 
         $dArr = new DynamicArr($values);
 
@@ -61,7 +61,7 @@ trait BuildsQueries
 
             $child->path($path);
 
-            if($child instanceof WField) {
+            if($child instanceof Field) {
 
                 if($dArr->exists($child->name())) {
                     $dKey = $dArr->find($child->name());
@@ -78,7 +78,7 @@ trait BuildsQueries
                     throw new Exception($child->name() . " is required.");
                 }
 
-            } else if($child instanceof WBinding) {
+            } else if($child instanceof Binding) {
 
                 if ($dArr->exists($child->name())) { //IF VALUES EXIST
 
@@ -86,7 +86,7 @@ trait BuildsQueries
                     $child->retrieve($instance, $child, $values[$dKey]);
                     self::construct($instance, $child, $values[$dKey], $child->path());
 
-                } else if($child instanceof WCallable) { //NO VALUES, BUT IS A CALLABLE SO PASS EMPTY VALUES
+                } else if($child instanceof Callable) { //NO VALUES, BUT IS A CALLABLE SO PASS EMPTY VALUES
 
                     $child->retrieve($instance, $child, []);
 
@@ -94,7 +94,7 @@ trait BuildsQueries
                     throw new Exception($child->name() . " binding values are required.");
                 }
 
-            } else if($child instanceof WModel) {
+            } else if($child instanceof Model) {
                 if($dArr->exists($child->name())) {
                     $dKey = $dArr->find($child->name());
                     if(is_array($values[$dKey])) {

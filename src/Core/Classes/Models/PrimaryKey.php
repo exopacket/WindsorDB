@@ -2,7 +2,7 @@
 
 namespace Windsor\Core\Classes\Models;
 
-class WPrimaryKey
+class PrimaryKey
 {
 
     private string $key;
@@ -29,7 +29,7 @@ class WPrimaryKey
 
     public static function default()
     {
-        return new WPrimaryKey();
+        return new PrimaryKey();
     }
 
 }
