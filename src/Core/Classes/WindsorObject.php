@@ -22,7 +22,7 @@ class WindsorObject implements Arrayable {
     public function __construct($name = null)
     {
         $className = $this->className();
-        if($className == "WObject" && !isset($name)) throw Exception("Basic WindsorObject must be constructed with a name.");
+        if($className == "WindsorObject" && !isset($name)) throw Exception("Basic WindsorObject must be constructed with a name.");
         if(!isset($name)) {
             $cases = $this->cases();
             if($this->multiple) $this->name = $cases['plural']['snake'];

@@ -38,7 +38,7 @@ abstract class Model extends WindsorObject
         parent::__construct();
     }
 
-    abstract protected function schema(XQLModel $model);
+    abstract protected function schema(Model $model);
 
     protected function build()
     {

@@ -2,7 +2,9 @@
 
 namespace Windsor\Core\Supporting;
 
+use Windsor\Core\Classes\Bindings\Attachment;
 use Windsor\Core\Classes\Models\PrimaryKey;
+use Windsor\Core\Classes\WindsorObject;
 
 trait BuildsModels
 {
@@ -20,6 +22,21 @@ trait BuildsModels
     protected function primary(PrimaryKey $key) : void
     {
         $this->primary = $key;
+    }
+
+    protected function attach(string $model, string $id = null)
+    {
+        $instance = new $model();
+        $attachment = new Attachment($instance, $id);
+        $this->children[] = $attachment;
+        return $attachment;
+    }
+
+    protected function group(string $name)
+    {
+        $object = new WindsorObject($name);
+        $this->children[] = $object;
+        return $object;
     }
 
 }

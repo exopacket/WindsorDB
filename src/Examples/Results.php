@@ -2,16 +2,26 @@
 
 namespace Windsor\Examples;
 
-use Windsor\Core\Classes\XQLModel;
+use Windsor\Core\Classes\Models\Model;
 
 class Results extends \Windsor\Core\Classes\Models\Model
 {
 
-    protected array $callables = [];
+    protected array $callables = [
+        "add" => self::class
+    ];
+
     protected array $hooks = [];
 
-    protected function schema(XQLModel $model)
+    protected array $casts = [];
+
+    protected function schema(Model $model)
     {
-        // TODO: Implement schema() method.
+        $model->field("test");
     }
+
+    protected static function add() {
+
+    }
+
 }
